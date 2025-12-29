@@ -1,0 +1,232 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f8ff;
+    color: #333;
+    line-height: 1.6;
+}
+
+.game-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+}
+
+h2 {
+    color: #34495e;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+h3 {
+    color: #2980b9;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+/* 难度选择区域 */
+.difficulty-selector {
+    margin-bottom: 30px;
+}
+
+.difficulty-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    margin: 0 10px;
+    font-size: 1.2em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.difficulty-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 游戏区域 */
+.game-area {
+    margin-top: 30px;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.timer {
+    transition: color 0.3s ease;
+    font-size: 1.4em;
+    padding: 8px 15px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 8px;
+    min-width: 150px;
+    text-align: center;
+}
+
+.timer.warning {
+    color: white;
+    background-color: #f39c12;
+    transform: scale(1.1);
+}
+
+.timer.danger {
+    color: white;
+    background-color: #e74c3c;
+    animation: pulse 1s infinite;
+    transform: scale(1.2);
+    font-weight: bold;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.question {
+    background-color: #ecf0f1;
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.option-btn {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 20px;
+    font-size: 1.5em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 80px;
+}
+
+.option-btn:hover {
+    background-color: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.option-btn.correct {
+    background-color: #2ecc71;
+}
+
+.option-btn.wrong {
+    background-color: #e74c3c;
+}
+
+.feedback {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feedback.correct {
+    background-color: #d5f4e6;
+    color: #27ae60;
+}
+
+.feedback.wrong {
+    background-color: #fdecea;
+    color: #e74c3c;
+}
+
+.control-btn {
+    background-color: #f39c12;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.control-btn:hover {
+    background-color: #e67e22;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+    .game-container {
+        margin: 20px;
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+    
+    h2 {
+        font-size: 1.5em;
+    }
+    
+    h3 {
+        font-size: 1.5em;
+    }
+    
+    .difficulty-btn {
+        display: block;
+        margin: 10px auto;
+        width: 80%;
+    }
+    
+    .options {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .option-btn {
+        font-size: 1.2em;
+        padding: 15px;
+    }
+    
+    .game-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

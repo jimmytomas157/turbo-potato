@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乘法口诀小游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>乘法口诀小游戏</h1>
+        
+        <!-- 难度选择 -->
+        <div class="difficulty-selector">
+            <h2>选择难度</h2>
+            <button class="difficulty-btn" data-level="easy">容易级</button>
+            <button class="difficulty-btn" data-level="simple">简单级</button>
+            <button class="difficulty-btn" data-level="hard">困难级</button>
+        </div>
+        
+        <!-- 游戏区域 -->
+        <div class="game-area" style="display: none;">
+            <div class="game-info">
+                <div class="score">得分: <span id="score">0</span></div>
+                <div class="question-count">题目: <span id="current-question">0</span>/<span id="total-questions">10</span></div>
+                <div class="timer">时间: <span id="timer">60</span>秒</div>
+            </div>
+            
+            <div class="question">
+                <h3 id="question-text">请选择难度开始游戏</h3>
+            </div>
+            
+            <div class="options">
+                <button class="option-btn" id="option-1"></button>
+                <button class="option-btn" id="option-2"></button>
+                <button class="option-btn" id="option-3"></button>
+                <button class="option-btn" id="option-4"></button>
+            </div>
+            
+            <div class="feedback" id="feedback"></div>
+            
+            <button class="control-btn" id="restart-btn">重新开始</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
