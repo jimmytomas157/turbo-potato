@@ -173,6 +173,56 @@ h3 {
     color: #e74c3c;
 }
 
+/* 输入区域样式 */
+.input-area {
+    margin-top: 20px;
+}
+
+.number-pad {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 0 10px;
+}
+
+.num-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 15px 10px;
+    font-size: 1.4em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 50px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.num-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.delete-btn {
+    background-color: #f39c12;
+}
+
+.delete-btn:hover {
+    background-color: #e67e22;
+}
+
+.submit-btn {
+    background-color: #27ae60;
+}
+
+.submit-btn:hover {
+    background-color: #229954;
+}
+
 .control-btn {
     background-color: #f39c12;
     color: white;
@@ -182,51 +232,103 @@ h3 {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
-}
-
 .control-btn:hover {
     background-color: #e67e22;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* 响应式设计 */
-@media (max-width: 600px) {
+/* 响应式设计优化 */
+@media (max-width: 768px) {
     .game-container {
-        margin: 20px;
+        margin: 20px auto;
         padding: 15px;
+        width: 95%;
+        box-sizing: border-box;
     }
     
     h1 {
         font-size: 2em;
+        margin-bottom: 20px;
     }
     
     h2 {
         font-size: 1.5em;
+        margin-bottom: 15px;
     }
     
     h3 {
-        font-size: 1.5em;
+        font-size: 1.6em;
+        margin-bottom: 20px;
     }
     
+    /* 难度选择按钮 */
     .difficulty-btn {
         display: block;
-        margin: 10px auto;
         width: 80%;
+        margin: 10px auto;
+        padding: 12px 20px;
+        font-size: 1.1em;
     }
     
+    /* 游戏信息区域 */
+    .game-info {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    /* 选项按钮 */
     .options {
         grid-template-columns: 1fr;
         gap: 15px;
+        max-width: 90%;
+        margin: 0 auto 30px;
+    }
+    
+    .option-btn {
+        padding: 15px;
+        font-size: 1.3em;
+        min-height: 70px;
+    }
+    
+    /* 数字键盘 */
+    .number-pad {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+        max-width: 95%;
+    }
+    
+    .num-btn {
+        padding: 12px 8px;
+        font-size: 1.3em;
+        min-height: 45px;
+    }
+    
+    /* 控制按钮 */
+    .control-btn {
+        padding: 12px 25px;
+        font-size: 1.1em;
+        width: 80%;
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8em;
+    }
+    
+    h3 {
+        font-size: 1.4em;
+    }
+    
+    .num-btn {
+        font-size: 1.2em;
+        padding: 10px 5px;
+        min-height: 40px;
     }
     
     .option-btn {
         font-size: 1.2em;
-        padding: 15px;
-    }
-    
-    .game-info {
-        flex-direction: column;
-        gap: 10px;
+        padding: 12px;
     }
 }

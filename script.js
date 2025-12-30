@@ -9,7 +9,15 @@ const gameState = {
     // 倒计时相关属性
     timeRemaining: 10, // 默认10秒
     timerInterval: null,
-    timeLimit: 10 // 每个题目的时间限制（秒）
+    timeLimit: 10, // 每个题目的时间限制（秒）
+    // 简单级输入相关
+    firstInput: '', // 第一个括号中的数字
+    secondInput: '', // 第二个括号中的数字
+    currentInputPosition: 1, // 当前输入位置，1表示第一个括号，2表示第二个括号
+    // 简单级目标结果
+    simpleLevelTargetResult: 0,
+    // 困难级输入相关
+    hardLevelInput: '' // 困难级用户输入的数字
 };
 
 // DOM元素对象（将在DOM加载完成后初始化）
@@ -35,6 +43,35 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.restartBtn = document.getElementById('restart-btn');
     elements.timerElement = document.getElementById('timer');
     elements.timerContainer = document.querySelector('.timer');
+    
+    // 初始化简单级输入区域元素
+    elements.inputArea = document.querySelector('.input-area');
+    elements.numBtns = document.querySelectorAll('.num-btn');
+    elements.submitBtn = document.querySelector('.submit-btn');
+    elements.deleteBtn = document.querySelector('.delete-btn');
+    elements.optionsContainer = document.querySelector('.options');
+    // 输入占位符元素（将在生成题目后获取）
+    elements.firstInput = null;
+    elements.secondInput = null;
+    
+    // 数字键盘按钮事件
+    elements.numBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const value = btn.getAttribute('data-value');
+            if (value) {
+                handleNumberInput(value);
+            }
+        });
+    });
+    
+    // 提交按钮事件
+    elements.submitBtn.addEventListener('click', handleSubmit);
+    
+    // 删除按钮事件
+    elements.deleteBtn.addEventListener('click', handleDelete);
+    
+    // 全局变量：当前输入内容
+    let currentInput = '';
     
     // 难度选择按钮事件
     elements.difficultyBtns.forEach(btn => {
@@ -118,13 +155,39 @@ function generateQuestion() {
     gameState.correctAnswer = correctAnswer;
     
     // 更新题目显示
-    elements.questionText.textContent = question;
+    // 使用innerHTML以便渲染括号中的HTML占位符
+    elements.questionText.innerHTML = question;
     
-    // 更新选项显示
-    options.forEach((option, index) => {
-        elements.optionBtns[index].textContent = option;
-        elements.optionBtns[index].className = 'option-btn';
-    });
+    // 根据难度显示或隐藏选项和输入区域
+    if (gameState.difficulty === 'simple' || gameState.difficulty === 'hard') {
+            // 简单级和困难级：隐藏选项，显示输入区域
+            elements.optionsContainer.style.display = 'none';
+            elements.inputArea.style.display = 'block';
+            
+            if (gameState.difficulty === 'simple') {
+                // 简单级：重置输入
+                gameState.firstInput = '';
+                gameState.secondInput = '';
+                gameState.currentInputPosition = 1;
+                updateInputDisplay();
+            } else {
+                // 困难级：重置输入
+                gameState.hardLevelInput = '';
+                // 更新困难级输入显示
+                updateHardLevelInputDisplay();
+            }
+        } else {
+        // 容易级：显示选项，隐藏输入区域
+        elements.optionsContainer.style.display = 'block';
+        elements.inputArea.style.display = 'none';
+        
+        // 更新选项显示
+        options.forEach((option, index) => {
+            elements.optionBtns[index].textContent = option;
+            elements.optionBtns[index].className = 'option-btn';
+            elements.optionBtns[index].disabled = false;
+        });
+    }
     
     // 启动倒计时
     startTimer();
@@ -171,53 +234,24 @@ function generateEasyQuestion() {
     return { question, options, correctAnswer: correct.toString() };
 }
 
-// 生成简单级题目（出结果，让学生选择算式）
+// 生成简单级题目（出结果，让学生输入算式）
 function generateSimpleQuestion() {
     // 生成两个1-9之间的随机数（乘法口诀范围）
     const a = Math.floor(Math.random() * 9) + 1;
     const b = Math.floor(Math.random() * 9) + 1;
     const correctResult = a * b;
     
-    // 生成题目
-    const question = `( ) = ${correctResult}`;
+    // 生成题目，格式为"( ) × ( ) = 得数"，使用占位符标记输入位置
+    const question = `(<span class="input-placeholder" id="input-first"></span>) × (<span class="input-placeholder" id="input-second"></span>) = ${correctResult}`;
     
     // 生成正确算式
     const correctOption = `${a} × ${b}`;
     
-    // 生成选项
-    const options = [correctOption];
+    // 将正确结果存储在游戏状态中，以便验证时使用
+    gameState.simpleLevelTargetResult = correctResult;
     
-    // 生成干扰项
-    const maxAttempts = 100; // 防止无限循环
-    let attempts = 0;
-    
-    while (options.length < 4 && attempts < maxAttempts) {
-        attempts++;
-        // 生成两个1-9之间的随机数，确保乘积不等于正确结果
-        const x = Math.floor(Math.random() * 9) + 1;
-        const y = Math.floor(Math.random() * 9) + 1;
-        if (x * y !== correctResult) {
-            const distractor = `${x} × ${y}`;
-            if (!options.includes(distractor)) {
-                options.push(distractor);
-            }
-        }
-    }
-    
-    // 如果尝试了很多次还是不够选项，就生成完全随机的算式
-    while (options.length < 4) {
-        const x = Math.floor(Math.random() * 9) + 1;
-        const y = Math.floor(Math.random() * 9) + 1;
-        const distractor = `${x} × ${y}`;
-        if (!options.includes(distractor)) {
-            options.push(distractor);
-        }
-    }
-    
-    // 随机排序选项
-    shuffleArray(options);
-    
-    return { question, options, correctAnswer: correctOption };
+    // 简单级现在不生成选项，只返回题目和正确答案
+    return { question, options: [], correctAnswer: correctOption };
 }
 
 // 生成困难级题目（给出一个随机得数以及一个因数，让学生选最大能填几）
@@ -230,30 +264,11 @@ function generateHardQuestion() {
     // 计算最大能填的数（结果在0-9之间，符合乘法口诀范围）
     const correct = Math.floor(target / factor);
     
-    // 生成题目
-    const question = `( ) × ${factor} ≤ ${target}，最大能填几？`;
+    // 生成题目，使用占位符标记输入位置
+    const question = `(<span class="input-placeholder" id="input-hard"></span>) × ${factor} ≤ ${target}，最大能填几？`;
     
-    // 生成选项：先生成0-9的所有可能值，排除正确答案后随机选3个
-    const allPossibleOptions = Array.from({length: 10}, (_, i) => i);
-    const possibleDistractors = allPossibleOptions.filter(num => num !== correct);
-    
-    // 随机选择3个干扰项
-    const distractors = [];
-    while (distractors.length < 3) {
-        const randomIndex = Math.floor(Math.random() * possibleDistractors.length);
-        const distractor = possibleDistractors[randomIndex];
-        if (!distractors.includes(distractor)) {
-            distractors.push(distractor);
-        }
-    }
-    
-    // 组合正确答案和干扰项
-    const options = [correct, ...distractors];
-    
-    // 随机排序选项
-    shuffleArray(options);
-    
-    return { question, options, correctAnswer: correct.toString() };
+    // 困难级现在不生成选项，只返回题目和正确答案
+    return { question, options: [], correctAnswer: correct.toString() };
 }
 
 // 检查答案
@@ -377,28 +392,59 @@ function handleTimeUp() {
     // 停止倒计时
     stopTimer();
     
-    // 禁用所有选项按钮
-    elements.optionBtns.forEach(btn => {
-        btn.disabled = true;
-    });
-    
-    // 显示超时反馈
-    showFeedback(`时间到！正确答案是 ${gameState.correctAnswer}`, 'wrong');
-    
-    // 高亮显示正确选项
-    elements.optionBtns.forEach(btn => {
-        if (btn.textContent === gameState.correctAnswer) {
-            btn.classList.add('correct');
+    // 不同难度模式的处理
+    if (gameState.difficulty === 'simple' || gameState.difficulty === 'hard') {
+        // 简单级或困难级（输入模式）
+        if (gameState.difficulty === 'simple') {
+            // 简单级
+            // 使用直接存储在游戏状态中的目标结果，这更可靠
+            const targetResult = gameState.simpleLevelTargetResult;
+            
+            const allPossibleAnswers = [];
+            for (let i = 1; i <= 9; i++) {
+                if (targetResult % i === 0) {
+                    const j = targetResult / i;
+                    if (j >= 1 && j <= 9 && i <= j) { // 只添加不重复的组合
+                        allPossibleAnswers.push(`${i} × ${j}`);
+                    }
+                }
+            }
+            
+            // 显示超时反馈
+            showFeedback(`时间到！正确答案可以是：${allPossibleAnswers.join(' 或 ')}`, 'wrong');
+        } else {
+            // 困难级
+            // 显示超时反馈
+            showFeedback(`时间到！正确答案是 ${gameState.correctAnswer}`, 'wrong');
         }
-    });
+    } else {
+        // 容易级（选项按钮模式）
+        // 禁用所有选项按钮
+        elements.optionBtns.forEach(btn => {
+            btn.disabled = true;
+        });
+        
+        // 显示超时反馈
+        showFeedback(`时间到！正确答案是 ${gameState.correctAnswer}`, 'wrong');
+        
+        // 高亮显示正确选项
+        elements.optionBtns.forEach(btn => {
+            if (btn.textContent === gameState.correctAnswer) {
+                btn.classList.add('correct');
+            }
+        });
+    }
     
     // 延迟后进入下一题或结束游戏
     setTimeout(() => {
         if (gameState.currentQuestion < gameState.totalQuestions) {
             generateQuestion();
-            elements.optionBtns.forEach(btn => {
-                btn.disabled = false;
-            });
+            // 如果是选项按钮模式，启用按钮
+            if (gameState.difficulty !== 'simple' && gameState.difficulty !== 'hard') {
+                elements.optionBtns.forEach(btn => {
+                    btn.disabled = false;
+                });
+            }
         } else {
             endGame();
         }
@@ -429,6 +475,11 @@ function restartGame() {
     gameState.currentProblem = null;
     gameState.correctAnswer = '';
     gameState.difficulty = '';
+    gameState.firstInput = '';
+    gameState.secondInput = '';
+    gameState.currentInputPosition = 1;
+    gameState.simpleLevelTargetResult = 0;
+    gameState.hardLevelInput = '';
     
     // 重置倒计时
     resetTimer();
@@ -437,6 +488,10 @@ function restartGame() {
     updateScore();
     updateQuestionCount();
     clearFeedback();
+    updateInputDisplay();
+    
+    // 重置输入区域显示
+    elements.inputArea.style.display = 'none';
     
     // 显示选项按钮
     elements.optionBtns.forEach(btn => {
@@ -444,6 +499,9 @@ function restartGame() {
         btn.disabled = false;
         btn.className = 'option-btn';
     });
+    
+    // 重置选项容器显示
+    elements.optionsContainer.style.display = 'block';
     
     // 返回难度选择界面
     elements.difficultySelector.style.display = 'block';
@@ -459,3 +517,175 @@ function shuffleArray(array) {
     }
     return array;
 }
+
+// 处理数字输入
+function handleNumberInput(value) {
+    if (gameState.difficulty === 'simple') {
+        // 简单级：根据当前输入位置将数字添加到相应的输入字段
+        if (gameState.currentInputPosition === 1) {
+            // 第一个括号只能输入一个数字
+            if (!gameState.firstInput) {
+                gameState.firstInput = value;
+                // 输入完成后自动切换到第二个括号
+                gameState.currentInputPosition = 2;
+            }
+        } else {
+            // 第二个括号只能输入一个数字
+            if (!gameState.secondInput) {
+                gameState.secondInput = value;
+                // 两个数字都输入完成后可以提交
+            }
+        }
+        
+        // 更新简单级显示
+        updateInputDisplay();
+    } else if (gameState.difficulty === 'hard') {
+        // 困难级：只能输入一个数字（0-9）
+        if (!gameState.hardLevelInput) {
+            gameState.hardLevelInput = value;
+        }
+        
+        // 更新困难级显示
+        updateHardLevelInputDisplay();
+    }
+}
+
+// 更新输入显示
+function updateInputDisplay() {
+    // 获取输入占位符元素（每次更新前重新获取，确保最新）
+    const firstInputElement = document.getElementById('input-first');
+    const secondInputElement = document.getElementById('input-second');
+    
+    if (firstInputElement && secondInputElement) {
+        firstInputElement.textContent = gameState.firstInput;
+        secondInputElement.textContent = gameState.secondInput;
+    }
+}
+
+// 更新困难级输入显示
+function updateHardLevelInputDisplay() {
+    // 获取输入占位符元素（每次更新前重新获取，确保最新）
+    const hardInputElement = document.getElementById('input-hard');
+    
+    if (hardInputElement) {
+        hardInputElement.textContent = gameState.hardLevelInput;
+    }
+}
+
+// 重置简单级输入
+function resetSimpleLevelInput() {
+    gameState.firstInput = '';
+    gameState.secondInput = '';
+    gameState.currentInputPosition = 1;
+    updateInputDisplay();
+}
+
+// 处理删除功能
+function handleDelete() {
+    if (gameState.difficulty === 'simple') {
+        // 简单级删除逻辑
+        if (gameState.currentInputPosition === 2) {
+            // 如果在第二个括号，先清空第二个括号
+            if (gameState.secondInput) {
+                gameState.secondInput = '';
+            } else {
+                // 第二个括号为空，切换到第一个括号
+                gameState.currentInputPosition = 1;
+                gameState.firstInput = '';
+            }
+        } else {
+            // 如果在第一个括号，清空第一个括号
+            gameState.firstInput = '';
+        }
+        
+        // 更新简单级显示
+        updateInputDisplay();
+    } else if (gameState.difficulty === 'hard') {
+        // 困难级删除逻辑
+        gameState.hardLevelInput = '';
+        
+        // 更新困难级显示
+        updateHardLevelInputDisplay();
+    }
+}
+
+// 处理提交答案
+function handleSubmit() {
+    let isCorrect = false;
+    
+    if (gameState.difficulty === 'simple') {
+        // 简单级验证
+        // 检查两个括号是否都有输入
+        if (!gameState.firstInput || !gameState.secondInput) {
+            showFeedback('请将两个括号都填写完整！', 'wrong');
+            return;
+        }
+        
+        // 解析用户输入的因数
+        const userFirst = parseInt(gameState.firstInput);
+        const userSecond = parseInt(gameState.secondInput);
+        
+        // 使用直接存储在游戏状态中的目标结果，这更可靠
+        const targetResult = gameState.simpleLevelTargetResult;
+        
+        // 检查条件：
+        // 1. 用户输入的乘积等于目标结果
+        // 2. 两个因数都在1-9之间（符合乘法口诀范围）
+        if (userFirst * userSecond === targetResult && 
+            userFirst >= 1 && userFirst <= 9 && 
+            userSecond >= 1 && userSecond <= 9) {
+            gameState.score++;
+            isCorrect = true;
+            showFeedback('回答正确！', 'correct');
+            updateScore();
+        } else {
+            // 提示所有可能的正确答案
+            const allPossibleAnswers = [];
+            for (let i = 1; i <= 9; i++) {
+                if (targetResult % i === 0) {
+                    const j = targetResult / i;
+                    if (j >= 1 && j <= 9 && i <= j) { // 只添加不重复的组合
+                        allPossibleAnswers.push(`${i} × ${j}`);
+                    }
+                }
+            }
+            showFeedback(`回答错误！正确答案可以是：${allPossibleAnswers.join(' 或 ')}`, 'wrong');
+        }
+    } else if (gameState.difficulty === 'hard') {
+        // 困难级验证
+        // 检查是否有输入
+        if (!gameState.hardLevelInput) {
+            showFeedback('请输入答案！', 'wrong');
+            return;
+        }
+        
+        // 检查答案是否正确
+        if (gameState.hardLevelInput === gameState.correctAnswer) {
+            gameState.score++;
+            isCorrect = true;
+            showFeedback('回答正确！', 'correct');
+            updateScore();
+        } else {
+            showFeedback(`回答错误！正确答案是 ${gameState.correctAnswer}`, 'wrong');
+        }
+    }
+    
+    // 停止倒计时
+    stopTimer();
+    
+    // 延迟后进入下一题或结束游戏
+    setTimeout(() => {
+        if (gameState.currentQuestion < gameState.totalQuestions) {
+            // 重置输入状态
+            if (gameState.difficulty === 'simple') {
+                resetSimpleLevelInput();
+            } else if (gameState.difficulty === 'hard') {
+                gameState.hardLevelInput = '';
+            }
+            generateQuestion();
+        } else {
+            endGame();
+        }
+    }, 1500);
+}
+
