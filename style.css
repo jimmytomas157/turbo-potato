@@ -39,6 +39,435 @@ h3 {
     font-size: 2em;
 }
 
+/* 模式选择区域 */
+.mode-selector {
+    margin-bottom: 30px;
+}
+
+.mode-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    margin: 0 10px;
+    font-size: 1.2em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mode-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 角色选择区域 */
+.character-selection {
+    margin-bottom: 30px;
+}
+
+.players {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.player-selection {
+    width: 45%;
+    min-width: 300px;
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.player-selection h3 {
+    margin-bottom: 15px;
+    color: #2980b9;
+}
+
+.selected-character {
+    background-color: #3498db;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.character-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+}
+
+.character {
+    background-color: #27ae60;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.character:hover {
+    background-color: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.character.selected {
+    background-color: #f39c12;
+    transform: scale(1.1);
+}
+
+.start-double-game-btn {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.start-double-game-btn:hover {
+    background-color: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.start-double-game-btn:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 双人游戏布局 */
+.double-game-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.player-area {
+    width: 40%;
+    min-width: 300px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.player1 {
+    border: 3px solid #3498db;
+}
+
+.player2 {
+    border: 3px solid #e74c3c;
+}
+
+.player-info {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.player-name {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.player1 .player-name {
+    color: #3498db;
+}
+
+.player2 .player-name {
+    color: #e74c3c;
+}
+
+.player-character {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.player-score, .player-timer {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.player-timer {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.player-question {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-question h3 {
+    font-size: 1.5em;
+    margin: 0;
+}
+
+.player-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.player-input-area {
+    margin-bottom: 20px;
+}
+
+.player-feedback {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-feedback.correct {
+    background-color: #d5f4e6;
+    color: #27ae60;
+}
+
+.player-feedback.wrong {
+    background-color: #fdecea;
+    color: #e74c3c;
+}
+
+/* 进度展示旗杆 */
+.progress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin: 0 10px;
+}
+
+.flagpole {
+    width: 10px;
+    height: 500px;
+    background-color: #8b4513;
+    border-radius: 5px 5px 0 0;
+    position: relative;
+}
+
+.flag {
+    width: 50px;
+    height: 30px;
+    position: absolute;
+    top: 10px;
+    border-radius: 5px;
+}
+
+#flag1 {
+    left: 15px;
+    background-color: #3498db;
+}
+
+#flag2 {
+    right: 15px;
+    background-color: #e74c3c;
+}
+
+.progress-markers {
+    position: absolute;
+    top: 0;
+    left: -15px;
+    width: 40px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.marker {
+    width: 100%;
+    height: 2px;
+    background-color: #bdc3c7;
+    position: relative;
+}
+
+.marker::after {
+    content: attr(data-number);
+    position: absolute;
+    left: -25px;
+    top: -8px;
+    font-size: 0.8em;
+    color: #7f8c8d;
+}
+
+.player-positions {
+    position: absolute;
+    top: 0;
+    left: -25px;
+    width: 60px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.player-position {
+    width: 50px;
+    height: 50px;
+    font-size: 2.5em;
+    position: absolute;
+    transition: top 0.5s ease-in-out;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-position.player1 {
+    left: -20px;
+    top: 450px;
+    background-color: rgba(52, 152, 219, 0.3);
+}
+
+.player-position.player2 {
+    right: -20px;
+    top: 450px;
+    background-color: rgba(231, 76, 60, 0.3);
+}
+
+/* 角色动画效果 */
+@keyframes jump {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes slip {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    50% { transform: translateX(10px); }
+    75% { transform: translateX(-10px); }
+    100% { transform: translateX(0); }
+}
+
+/* 猴子特有动画 - 翻滚跳跃 */
+@keyframes monkeyJump {
+    0% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-10px) rotate(45deg); }
+    50% { transform: translateY(-25px) rotate(90deg); }
+    75% { transform: translateY(-10px) rotate(135deg); }
+    100% { transform: translateY(0) rotate(180deg); }
+}
+
+/* 兔子特有动画 - 弹跳 */
+@keyframes rabbitJump {
+    0% { transform: translateY(0) scale(1); }
+    25% { transform: translateY(-15px) scale(1.1); }
+    50% { transform: translateY(-30px) scale(1); }
+    75% { transform: translateY(-15px) scale(1.1); }
+    100% { transform: translateY(0) scale(1); }
+}
+
+/* 熊猫特有动画 - 翻滚 */
+@keyframes pandaJump {
+    0% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(360deg); }
+    100% { transform: translateY(0) rotate(720deg); }
+}
+
+/* 老虎特有动画 - 猛扑 */
+@keyframes tigerJump {
+    0% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-25px) translateX(10px); }
+    100% { transform: translateY(0) translateX(0); }
+}
+
+/* 大象特有动画 - 沉重跳跃 */
+@keyframes elephantJump {
+    0% { transform: translateY(0) scaleY(1); }
+    25% { transform: translateY(-5px) scaleY(0.95); }
+    50% { transform: translateY(-15px) scaleY(1.05); }
+    75% { transform: translateY(-5px) scaleY(0.95); }
+    100% { transform: translateY(0) scaleY(1); }
+}
+
+/* 角色样式 */
+.character.monkey {
+    background-color: rgba(241, 196, 15, 0.3);
+    border: 2px solid #f1c40f;
+}
+
+.character.rabbit {
+    background-color: rgba(231, 76, 60, 0.3);
+    border: 2px solid #e74c3c;
+}
+
+.character.panda {
+    background-color: rgba(52, 152, 219, 0.3);
+    border: 2px solid #3498db;
+}
+
+.character.tiger {
+    background-color: rgba(243, 156, 18, 0.3);
+    border: 2px solid #f39c12;
+}
+
+.character.elephant {
+    background-color: rgba(149, 165, 166, 0.3);
+    border: 2px solid #95a5a6;
+}
+
+/* 角色跳跃动画 */
+.character.monkey.jump {
+    animation: monkeyJump 0.8s ease-in-out;
+}
+
+.character.rabbit.jump {
+    animation: rabbitJump 0.6s ease-in-out;
+}
+
+.character.panda.jump {
+    animation: pandaJump 0.9s ease-in-out;
+}
+
+.character.tiger.jump {
+    animation: tigerJump 0.7s ease-in-out;
+}
+
+.character.elephant.jump {
+    animation: elephantJump 0.8s ease-in-out;
+}
+
+/* 通用滑倒动画 */
+.character.slip {
+    animation: slip 0.5s ease-in-out;
+}
+
 /* 难度选择区域 */
 .difficulty-selector {
     margin-bottom: 30px;
@@ -232,6 +661,8 @@ h3 {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
+}
+
 .control-btn:hover {
     background-color: #e67e22;
 }
